@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ludo with Friends</title>
+<meta name="theme-color" content="#2a1a6e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🎲</text></svg>">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--fg:#fff;--mut:#b9b3e6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#1a1048 radial-gradient(120% 90% at 50% 0%,#5b3fc4 0%,#2a1a6e 55%,#150d3b 100%) fixed;color:var(--fg);font:16px/1.35 "Trebuchet MS",system-ui,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:12px}
+.logo{font:900 56px/1 "Trebuchet MS",system-ui;text-align:center;letter-spacing:4px;margin:18px 0 2px;text-shadow:0 4px 0 #0005}
+.logo span:nth-child(1){color:#e5383b}.logo span:nth-child(2){color:#2eb872}.logo span:nth-child(3){color:#fcc419}.logo span:nth-child(4){color:#2f80ed}
+.sub{text-align:center;color:var(--mut);margin:4px 0 10px}.mut{color:var(--mut);font-size:14px}
+.panel{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:14px;margin:12px 0}
+.panel label{font-size:13px;color:var(--mut);display:block;margin-bottom:4px}
+input{width:100%;padding:13px;font:700 17px system-ui;border-radius:12px;border:0;background:#fff;color:#2a1a6e}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:13px;margin:10px 0 0;font:800 17px "Trebuchet MS",system-ui;color:#3b1d00;background:linear-gradient(#ffd166,#fb8500);box-shadow:0 5px 0 #a8520a;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #a8520a}
+.btn.alt{color:#fff;background:linear-gradient(#5dd6ff,#2f80ed);box-shadow:0 5px 0 #1b4f9c}
+.btn.gh{color:#fff;background:rgba(255,255,255,.12);box-shadow:none}
+.btn:disabled{opacity:.5}
+.pills{display:flex;gap:8px;margin:6px 0}
+.pill{flex:1;height:48px;border-radius:12px;border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:800 18px system-ui;cursor:pointer}
+.pill.on{background:#fcc419;color:#3b1d00;border-color:#fcc419}
+.err{color:#ff8a8a;min-height:20px;text-align:center}
+.code{font:900 44px ui-monospace,monospace;letter-spacing:10px;text-align:center;background:rgba(0,0,0,.25);border-radius:14px;padding:12px;margin:8px 0}
+.slot{padding:10px 12px;background:rgba(255,255,255,.08);border-radius:12px;margin:6px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
+.chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:2px solid transparent;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700}
+.chip b{width:12px;height:12px;border-radius:50%;background:var(--c)}.chip em{font-style:normal;opacity:.7}
+.chip.on{border-color:var(--c);box-shadow:0 0 14px var(--c);background:rgba(255,255,255,.22)}
+svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 22px #8b6cff77) drop-shadow(0 12px 18px #0008)}
+.tk{transition:transform .21s cubic-bezier(.4,0,.2,1)}.nt .tk{transition:none}.tk.mv{cursor:pointer}.yo{fill:none;stroke:#fff;stroke-width:.28;opacity:0;transition:opacity .3s}.yo.on{opacity:1;animation:yo .7s infinite alternate}@keyframes yo{to{opacity:.3}}.in{transform-box:fill-box;transform-origin:center}
+.pulse{display:none;fill:none;stroke:#fff;stroke-width:.12;animation:pl .6s infinite alternate;transform-box:fill-box;transform-origin:center}
+.tk.mv .pulse{display:block}
+@keyframes pl{to{transform:scale(1.4);opacity:.3}}
+.dz{display:flex;align-items:center;justify-content:center;gap:16px;margin:16px 0 6px;min-height:84px}
+.dice{width:76px;height:76px;background:#fff;border-radius:18px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:10px;box-shadow:0 6px 0 #c9c3e8,0 12px 22px #0006}
+.dice i{display:block}.dice .pip{background:#2a1a6e;border-radius:50%;width:80%;height:80%;margin:auto}
+.dice.can{cursor:pointer;animation:bob .8s infinite alternate;box-shadow:0 6px 0 #c9c3e8,0 0 32px var(--c,#ffd166)}
+.dice.rl{animation:spin .5s linear}
+@keyframes bob{to{transform:translateY(-6px)}}
+@keyframes spin{50%{transform:rotate(360deg) scale(1.15)}to{transform:rotate(720deg) scale(1)}}
+.log{text-align:center;font-weight:700;min-height:22px}
+.win{font:900 26px "Trebuchet MS",system-ui;text-align:center;color:#ffd166;margin:8px 0}
+.logo span{display:inline-block;animation:fl 1.8s ease-in-out infinite alternate}.logo span:nth-child(2){animation-delay:.2s}.logo span:nth-child(3){animation-delay:.4s}.logo span:nth-child(4){animation-delay:.6s}@keyframes fl{to{transform:translateY(-8px) rotate(-4deg)}}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(40% 30% at 20% 20%,#e5383b33,transparent),radial-gradient(40% 30% at 80% 30%,#2f80ed33,transparent),radial-gradient(40% 30% at 50% 90%,#fcc41933,transparent);animation:bgm 10s ease-in-out infinite alternate}@keyframes bgm{to{transform:translateY(-4%) scale(1.15)}}
+.chip{padding:3px 12px 3px 4px}.chip b{width:26px;height:26px;display:grid;place-items:center;font-size:15px;background:var(--c);border-radius:50%}
+.chip.on{animation:cp .9s infinite alternate}@keyframes cp{to{box-shadow:0 0 26px var(--c)}}
+.mute{background:rgba(255,255,255,.12);border:0;border-radius:50%;width:34px;height:34px;font-size:16px;color:#fff;cursor:pointer}
+.dice{width:84px;height:84px;background:linear-gradient(145deg,#fff,#e4defa)}
+.hint{fill:none;stroke-width:.14;animation:ht .7s infinite alternate;pointer-events:none;transform-box:fill-box;transform-origin:center}@keyframes ht{to{transform:scale(1.35);opacity:.35}}
+.toast{position:fixed;left:50%;top:26%;z-index:10;font:900 34px "Trebuchet MS",system-ui;color:#fff;text-shadow:0 3px 0 #0006,0 0 18px #ffd166;animation:ts 1.5s ease-out forwards;pointer-events:none;white-space:nowrap}
+@keyframes ts{0%{opacity:0;transform:translateX(-50%) scale(.4)}20%{opacity:1;transform:translateX(-50%) scale(1.15)}80%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(-30px)}}
+.cf{position:fixed;top:-20px;width:9px;height:14px;z-index:9;pointer-events:none;animation:fall linear forwards}@keyframes fall{to{top:105vh;transform:rotate(720deg)}}
+</style></head><body><div id="app"></div>
+<script type="module">
+import {firebaseConfig} from './firebase-config.js';
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {getFirestore,doc as fdoc,getDoc,setDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const COL=['#e5383b','#2eb872','#fcc419','#2f80ed','#9b5de5','#ff8c42'],DK=['#9d1216','#17794a','#b58900','#1a55ad','#6a3aa8','#c25a14'];
+const ARMS={2:[0,2],3:[0,1,2],4:[0,1,2,3],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
+const app=document.getElementById('app');
+let db=null,ref=null,unsub=null,S=null,G=null,msg='',built='',disp=[],prevP=null,maxSel=4,rolling=false,_id=null,DEMO=false,botT=null,autoT=null,lastRc,lastLog='',lastTm=false,muted=false,AC=null,skipRc=false;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rid=()=>Math.random().toString(36).slice(2,10),$=id=>document.getElementById(id);
+function me(){try{let v=localStorage.getItem('ludo-id');if(!v){v=rid();localStorage.setItem('ludo-id',v)}return v}catch(e){return _id||(_id=rid())}}
+function savedName(){try{return localStorage.getItem('ludo-name')||''}catch(e){return ''}}
+function saveName(n){try{localStorage.setItem('ludo-name',n)}catch(e){}}
+const val=id=>($(id)?.value||'').trim();
+const gen=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=a[Math.floor(Math.random()*a.length)];return s};
+function setMsg(m){msg=m;if($('err'))$('err').textContent=m}
+
+// ---------- geometry (n arms; 4 = classic cross, 5 = pentagon, 6 = hexagon) ----------
+const gm=n=>{const D=2*Math.PI/n,s=Math.sin(D/2),c=Math.cos(D/2),H=(c+.7071)/s-.5,a=n==4?2.4:2,Y=n==4?6:(1.6+a*c)/s+a,Rv=n==4?0:Y+a+a/Math.tan(Math.PI/2-Math.PI/n)+.3;return{n,D,s,c,H,L:13*n,Y,a,Rv,E:(n==4?Math.max(Y+a,H+6.5):Rv)+.5}};
+const rho=(g,k)=>g.n==4?0:fa(g,k)+g.D/2;
+const fa=(g,k)=>Math.PI+g.D*k;
+const xy=(g,k,u,v)=>{const f=fa(g,k);return[u*Math.cos(f)-v*Math.sin(f),u*Math.sin(f)+v*Math.cos(f)]};
+function ring(g,i){const k=Math.floor(i/13),j=i%13;return j<6?xy(g,k,g.H+j+.5,-1):j==6?xy(g,k,g.H+5.5,0):xy(g,k,g.H+12.5-j,1)}
+function pos(g,k,p,i){
+  if(p==0){const f=fa(g,k)+g.D/2,r=rho(g,k),o=[[-1,-1],[1,-1],[-1,1],[1,1]][i],ox=o[0]*.9,oy=o[1]*.9;return[g.Y*Math.cos(f)+ox*Math.cos(r)-oy*Math.sin(r),g.Y*Math.sin(f)+ox*Math.sin(r)+oy*Math.cos(r)]}
+  if(p<g.L)return ring(g,(13*k+7+p)%g.L);
+  if(p<g.L+5)return xy(g,k,g.H+4.5-(p-g.L),0);
+  return xy(g,k,g.H*.62,(i-1.5)*.3);
+}
+const mov=(a,n)=>a===0?n===6:a+n<=G.L+5;
+
+const star=(x,y,c)=>{let p='';for(let i=0;i<10;i++){const r=i%2?.16:.38,a=-Math.PI/2+i*Math.PI/5;p+=(x+r*Math.cos(a)).toFixed(2)+','+(y+r*Math.sin(a)).toFixed(2)+' '}return `<polygon points="${p}" fill="${c}"/>`};
+const arrow=(x,y,rad,c)=>`<path d="M-.3 -.12H.05V-.3L.38 0L.05 .3V.12H-.3Z" fill="${c}" transform="translate(${x} ${y}) rotate(${rad*180/Math.PI})"/>`;
+const cr=(g,x,y,k,fill)=>`<rect x="${x-.48}" y="${y-.48}" width=".96" height=".96" rx=".12" fill="${fill}" stroke="#777" stroke-width=".06" transform="rotate(${(fa(g,k)*180/Math.PI).toFixed(2)} ${x.toFixed(3)} ${y.toFixed(3)})"/>`;
+function boardSVG(g){
+  const E=g.E,st='#777';
+  let s=`<svg viewBox="${-E} ${-E} ${2*E} ${2*E}"><defs><filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy=".12" stdDeviation=".09" flood-opacity=".6"/></filter>${defs(g)}</defs>`;
+  if(g.n==4)s+=`<rect x="${-E+.25}" y="${-E+.25}" width="${2*E-.5}" height="${2*E-.5}" rx=".9" fill="url(#bg)" stroke="#1b1250" stroke-width=".5"/>`;
+  else{const pts=[];for(let k=0;k<g.n;k++){const f=fa(g,k)+g.D/2;pts.push((g.Rv*Math.cos(f)).toFixed(2)+','+(g.Rv*Math.sin(f)).toFixed(2))}s+=`<polygon points="${pts.join(' ')}" fill="url(#bg)" stroke="#1b1250" stroke-width=".5" stroke-linejoin="round"/>`}
+  for(let k=0;k<g.n;k++){
+    const f=fa(g,k)+g.D/2,cx=g.Y*Math.cos(f),cy=g.Y*Math.sin(f),a=g.a,deg=rho(g,k)*180/Math.PI;
+    s+=`<g transform="translate(${cx} ${cy}) rotate(${deg})"><rect id="yo${k}" class="yo" x="${-a-.22}" y="${-a-.22}" width="${2*a+.44}" height="${2*a+.44}" rx=".75"/><rect x="${-a}" y="${-a}" width="${2*a}" height="${2*a}" rx=".55" fill="url(#y${k})"/><rect x="${-a+.45}" y="${-a+.45}" width="${2*a-.9}" height="${2*a-.9}" rx=".4" fill="#fff"/>`;
+    for(const[x,y]of[[-1,-1],[1,-1],[-1,1],[1,1]])s+=`<circle cx="${x*.9}" cy="${y*.9}" r=".6" fill="${COL[k]}" stroke="${DK[k]}" stroke-width=".1"/><circle cx="${x*.9}" cy="${y*.9}" r=".36" fill="#fff" fill-opacity=".35"/>`;
+    s+='</g>';
+  }
+  for(let i=0;i<g.L;i++){
+    const[x,y]=ring(g,i),j=i%13,k=Math.floor(i/13),dir=fa(g,k)+Math.PI;
+    s+=cr(g,x,y,k,j==8?COL[k]:'#fff');
+    if(j==3)s+=star(x,y,'#a0a0a0');
+    if(j==8)s+=arrow(x,y,dir,'#fff');
+    if(j==6)s+=arrow(x,y,dir,COL[k]);
+  }
+  const r0=g.H/g.c;
+  for(let k=0;k<g.n;k++){
+    for(let r=1;r<=5;r++){const[x,y]=xy(g,k,g.H+r-.5,0);s+=cr(g,x,y,k,COL[k])}
+    const f=fa(g,k),p1=[r0*Math.cos(f-g.D/2),r0*Math.sin(f-g.D/2)],p2=[r0*Math.cos(f+g.D/2),r0*Math.sin(f+g.D/2)];
+    s+=`<polygon points="0,0 ${p1} ${p2}" fill="${COL[k]}" stroke="#fff" stroke-width=".08" stroke-linejoin="round"/>`;
+  }
+  s+='<circle r=".5" fill="#fff" stroke="#1b1250" stroke-width=".1" filter="url(#sh)"/><g id="hint"></g><g id="tk">';
+  S.players.forEach((p,j)=>{for(let i=0;i<4;i++)s+=`<g class="tk" id="t${j}_${i}" data-i="${i}" data-act=""><g class="in"><g transform="translate(0 -.12)"><ellipse cy=".5" rx=".3" ry=".09" fill="#000" fill-opacity=".3"/><circle class="pulse" cy="-.15" r=".62"/><path d="M0 .5C-.12 .32 -.4 .1 -.4 -.15A.4 .4 0 0 1 .4 -.15C.4 .1 .12 .32 0 .5Z" fill="url(#g${p.arm})" stroke="#fff" stroke-width=".07" filter="url(#sh)"/><circle cy="-.15" r=".17" fill="#fff"/><ellipse cx="-.16" cy="-.3" rx=".07" ry=".1" fill="#fff" fill-opacity=".6"/></g></g></g>`});
+  return s+'</g><g id="fx"></g></svg>';
+}
+function layout(){
+  const cnt={};
+  S.players.forEach((p,j)=>disp[j].forEach((d,i)=>{
+    const el=$('t'+j+'_'+i);if(!el)return;
+    const[x,y]=pos(G,p.arm,d,i),key=d>0?x.toFixed(1)+','+y.toFixed(1):'y'+j+i,k=cnt[key]=(cnt[key]||0)+1,o=(k-1)*.22;
+    el.style.transform=`translate(${x+o}px,${y-o}px)`;
+    const can=myTurn()&&S.dice&&j===S.turn&&mov(S.pieces[j][i],S.dice);
+    el.classList.toggle('mv',!!can);el.dataset.act=can?'move':'';
+  }));
+  const hn=$('hint');if(hn){let h='';if(myTurn()&&S.dice){const t=S.turn,ar=S.players[t].arm;S.pieces[t].forEach((a,i)=>{if(mov(a,S.dice)){const[x,y]=pos(G,ar,a===0?1:a+S.dice,i);h+=`<circle class="hint" cx="${x}" cy="${y}" r=".5" stroke="${COL[ar]}"/>`}})}hn.innerHTML=h}
+  for(let k=0;k<G.n;k++)$('yo'+k)?.classList.toggle('on',S.status==='playing'&&S.players[S.turn]?.arm===k);
+}
+function animate(pv){
+  const ST=210,fw=(o,p)=>o!==undefined&&p>o&&p-o<=6&&!(o===0&&p!==1);let delay=0;
+  S.pieces.forEach((a,j)=>a.forEach((p,i)=>{const o=pv[j]?.[i];if(fw(o,p))delay=Math.max(delay,(p-o)*ST)}));
+  S.pieces.forEach((a,j)=>a.forEach((p,i)=>{
+    const o=pv[j]?.[i];
+    if(o===undefined||o===p){disp[j][i]=p;return}
+    if(fw(o,p)){
+      let c=o;const el=$('t'+j+'_'+i)?.firstElementChild;
+      const step=()=>{c++;disp[j][i]=Math.min(c,S.pieces[j][i]);layout();
+        el?.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(-.3px) scale(1.3)'},{transform:'translateY(0) scale(1)'}],{duration:ST});
+        sfx.step();if(c>=p&&p===G.L+5){const q=pos(G,S.players[j].arm,p,i);burst(q[0],q[1],"#ffd166")}if(c<p)setTimeout(step,ST)};
+      step();
+    }else if(p===0&&o>0)setTimeout(()=>{if(S){const q=pos(G,S.players[j].arm,o,i);burst(q[0],q[1],COL[S.players[j].arm]);disp[j][i]=S.pieces[j][i];layout()}},delay+80);
+    else disp[j][i]=p;
+  }));
+  layout();
+}
+
+try{muted=localStorage.getItem('ludo-mute')==='1'}catch(e){}
+const AV=['🦁','🐯','🦊','🐼','🐸','🦄'];
+const defs=g=>{let h='<radialGradient id="bg" cx=".5" cy=".4" r=".75"><stop offset="0" stop-color="#fffefa"/><stop offset="1" stop-color="#f1e6cc"/></radialGradient>';for(let k=0;k<6;k++)h+=`<radialGradient id="g${k}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="${COL[k]}"/><stop offset="1" stop-color="${DK[k]}"/></radialGradient><linearGradient id="y${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${COL[k]}"/><stop offset="1" stop-color="${DK[k]}"/></linearGradient>`;return h};
+function snd(f,d=.12,t='sine',v=.15,at=0){if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime+at;o.type=t;o.frequency.setValueAtTime(f,n);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+d)}catch(e){}}
+const sfx={step:()=>snd(520+Math.random()*60,.07,'triangle',.12),roll:()=>{for(let i=0;i<5;i++)snd(200+Math.random()*200,.05,'square',.05,i*.09)},cap:()=>{snd(440,.12,'sawtooth',.12);snd(220,.25,'sawtooth',.12,.1)},home:()=>[523,659,784,1047].forEach((f,i)=>snd(f,.18,'triangle',.15,i*.09)),win:()=>[523,659,784,1047,784,1047,1319].forEach((f,i)=>snd(f,.22,'triangle',.16,i*.11)),turn:()=>{snd(880,.1,'sine',.12);snd(1175,.14,'sine',.12,.1)}};
+const buzz=n=>{try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}};
+function burst(x,y,c){const f=$('fx');if(!f)return;for(let i=0;i<10;i++){const a=i*Math.PI/5,e=document.createElementNS('http://www.w3.org/2000/svg','circle');e.setAttribute('cx',x);e.setAttribute('cy',y);e.setAttribute('r',.16);e.setAttribute('fill',i%2?c:'#ffd166');f.appendChild(e);e.animate([{transform:'translate(0px,0px)',opacity:1},{transform:`translate(${Math.cos(a)*1.8}px,${Math.sin(a)*1.8}px)`,opacity:0}],{duration:650,easing:'ease-out'}).onfinish=()=>e.remove()}}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600)}
+function confetti(){for(let i=0;i<80;i++){const e=document.createElement('i');e.className='cf';e.style.cssText=`left:${Math.random()*100}vw;background:${COL[i%6]};animation-delay:${Math.random()*.8}s;animation-duration:${2+Math.random()*2}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),5000)}}
+// ---------- actions ----------
+async function sub(c){
+  ref=db.doc('rooms/'+c);unsub&&unsub();
+  unsub=ref.onSnapshot(s=>{if(s.exists){S=s.data();render()}},e=>{leave();setMsg(e.message||'Connection lost')});
+}
+function leave(){DEMO=false;ref=null;clearTimeout(botT);unsub&&unsub();unsub=null;S=null;built='';prevP=null;render()}
+async function create(){
+  const name=val('nm');if(!name)return setMsg('Enter your name first');
+  saveName(name);
+  try{
+    let c;for(let t=0;t<6;t++){c=gen();if(!(await db.doc('rooms/'+c).get()).exists)break}
+    await db.doc('rooms/'+c).set({v:2,code:c,host:me(),max:maxSel,n:Math.max(4,maxSel),status:'lobby',rnd:0,players:[{id:me(),name}],pieces:[],turn:0,dice:null,last:1,winner:null,log:''});
+    await sub(c);
+  }catch(e){setMsg('Could not create room. Check your Firebase setup (Firestore rules and Anonymous sign-in).')}
+}
+async function join(){
+  const name=val('nm'),c=val('cd').toUpperCase();
+  if(!name)return setMsg('Enter your name first');
+  if(c.length<5)return setMsg('Enter the 5-letter room code');
+  saveName(name);
+  try{
+    const r=await db.doc('rooms/'+c).get();
+    if(!r.exists||r.data().v!==2)return setMsg('Room not found');
+    const d={...r.data()};
+    if(!d.players.some(p=>p.id===me())){
+      if(d.status!=='lobby')return setMsg('That game has already started');
+      if(d.players.length>=d.max)return setMsg('Room is full');
+      d.players=[...d.players,{id:me(),name}];await db.doc('rooms/'+c).set(d);
+    }
+    await sub(c);
+  }catch(e){setMsg('Could not join. Check your Firebase setup (Firestore rules and Anonymous sign-in).')}
+}
+function save(ns){S=ns;render();ref&&ref.set(ns).catch(e=>setMsg('Sync failed'))}
+function start(){
+  const cnt=S.players.length,arms=ARMS[cnt];
+  save({...S,status:'playing',n:Math.max(4,cnt),rnd:S.rnd+1,players:S.players.map((p,i)=>({...p,arm:arms[i]})),pieces:S.players.map(()=>[0,0,0,0]),turn:0,dice:null,last:1,winner:null,log:'Game started!'});
+}
+const myIdx=()=>S.players.findIndex(p=>p.id===me());
+const myTurn=()=>S&&S.status==='playing'&&(DEMO?S.turn===0:myIdx()===S.turn);
+function roll(f){
+  if(!(f||myTurn())||S.dice)return;
+  const n=1+Math.floor(Math.random()*6),t=S.turn,can=S.pieces[t].some(a=>mov(a,n));
+  save({...S,dice:n,last:n,rc:(S.rc||0)+1,log:`${S.players[t].name} rolled ${n}`+(can?'':' — no move')});
+  if(!can)setTimeout(()=>{if(S&&S.turn===t&&S.dice===n)save({...S,dice:null,turn:(t+1)%S.players.length})},1400);
+}
+function move(i,f){
+  if(!(f||myTurn())||!S.dice)return;
+  const t=S.turn,n=S.dice,a=S.pieces[t][i];if(!mov(a,n))return;
+  const pcs=S.pieces.map(x=>x.slice()),np=a===0?1:a+n,L=G.L;pcs[t][i]=np;
+  let cap=false;
+  if(np<L){
+    const idx=(13*S.players[t].arm+7+np)%L;
+    if(idx%13!==8&&idx%13!==3)S.players.forEach((q,j)=>{if(j!==t)pcs[j]=pcs[j].map(b=>(b>=1&&b<L&&(13*q.arm+7+b)%L===idx)?(cap=true,0):b)});
+  }
+  const won=pcs[t].every(b=>b===L+5),extra=n===6||cap||np===L+5,nm=S.players[t].name;
+  save({...S,pieces:pcs,dice:null,turn:(won||extra)?t:(t+1)%S.players.length,status:won?'done':'playing',winner:won?t:null,
+    log:won?`${nm} wins! 🎉`:`${nm} moved`+(cap?' and captured a piece!':np===L+5?' a piece home!':'')+(extra?' — goes again':'')});
+}
+function again(){save({...S,status:'lobby',pieces:[],turn:0,dice:null,winner:null,log:''})}
+
+function demo(){
+  DEMO=true;ref=null;maxSel=5;
+  const nm=['You','Aarav','Riya','Kabir','Meera'];
+  S={v:2,code:'DEMO',host:me(),max:5,n:5,status:'playing',rnd:1,players:nm.map((n,i)=>({id:i?'bot'+i:me(),name:n,arm:i})),pieces:[[0,9,27,67],[0,15,38,0],[4,33,0,0],[21,0,52,70],[0,11,0,60]],turn:0,dice:null,last:1,winner:null,log:'Demo: you are Red, the others are bots.'};
+  render();
+}
+function botTick(){
+  clearTimeout(botT);
+  if(!DEMO||!S||S.status!=='playing'||S.turn===0)return;
+  botT=setTimeout(()=>{
+    if(!DEMO||!S||S.turn===0)return;
+    if(!S.dice)return roll(true);
+    const t=S.turn,n=S.dice,L=G.L,ps=S.pieces[t].map((p,i)=>i).filter(i=>mov(S.pieces[t][i],n));
+    if(!ps.length)return;
+    const sc=i=>{const p=S.pieces[t][i];return p+n===L+5?1e3:p===0?500:p};
+    ps.sort((x,y)=>sc(y)-sc(x));move(ps[0],true);
+  },S.dice?950:850);
+}
+// ---------- views ----------
+const home=()=>`<div class="logo"><span>L</span><span>U</span><span>D</span><span>O</span></div><div class="sub">Play with friends · 2–6 players</div>
+<div class="panel"><label>Your name</label><input id="nm" maxlength="14" value="${esc(savedName())}" placeholder="Enter your name">${db?'':'<div class="err">Connecting to the game server…</div>'}</div>
+<div class="panel"><label>Create a room — number of players</label><div class="pills">${[2,3,4,5,6].map(n=>`<button class="pill ${n==maxSel?'on':''}" data-act="pc" data-n="${n}">${n}</button>`).join('')}</div><div class="mut" id="cap">${capt(maxSel)}</div><button class="btn" data-act="create" ${db?'':'disabled'}>Create room</button></div>
+<div class="panel"><label>Join with a room code</label><input id="cd" maxlength="5" placeholder="CODE" style="text-transform:uppercase;letter-spacing:6px;text-align:center"><button class="btn alt" data-act="join" ${db?'':'disabled'}>Join room</button></div><button class="btn gh" data-act="demo">▶ Watch a 5-player demo</button><div class="err" id="err">${esc(msg)}</div>`;
+const capt=n=>n==5?'Pentagon board':n==6?'Hexagon board':'Classic cross board';
+const lobby=()=>{const h=S.host==me();return `<div class="logo" style="font-size:36px">LOBBY</div><div class="panel" style="text-align:center"><div class="mut">Share this room code with your friends</div><div class="code">${S.code}</div><button class="btn gh" data-act="copy">Copy code</button></div>
+<div class="panel">${Array.from({length:S.max},(_,i)=>{const p=S.players[i];return p?`<div class="slot">👤 <b>${esc(p.name)}</b>${p.id==S.host?' · host':''}${p.id==me()?' · you':''}</div>`:'<div class="slot mut">Waiting for player…</div>'}).join('')}</div>
+${h?`<button class="btn" data-act="start" ${S.players.length<2?'disabled':''}>${S.players.length<2?'Need 2+ players':'Start game'}</button>`:'<div class="sub">Waiting for the host to start…</div>'}<button class="btn gh" data-act="leave">Leave</button>`};
+const PIPS={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+const pips=v=>{let h='';for(let c=1;c<10;c++)h+=PIPS[v].includes(c)?'<i class="pip"></i>':'<i></i>';return h};
+const diceHTML=(v,cls)=>`<div id="dice" class="dice ${cls}" ${cls=='can'?'data-act="roll"':''}>${pips(v)}</div>`;
+function render(){
+  if(!S){app.innerHTML=home();built='';return}
+  if(S.status==='lobby'){app.innerHTML=lobby();built='';return}
+  G=gm(S.n);const key=S.code+':'+S.rnd;
+  if(built!==key||!$('bdw')){built=key;app.innerHTML='<div id="top"></div><div id="bdw"></div><div id="bot"></div>';$('bdw').innerHTML=boardSVG(G);disp=S.pieces.map(a=>a.slice());prevP=null}
+  $('top').innerHTML=`<div class="chips">${S.players.map((p,j)=>`<div class="chip ${j==S.turn&&S.status=='playing'?'on':''}" style="--c:${COL[p.arm]}"><b>${AV[p.arm]}</b>${esc(p.name)}${p.id==me()?' (you)':''} <em>${S.pieces[j].filter(a=>a===G.L+5).length}/4</em></div>`).join('')}<button class="mute" data-act="mute">${muted?'🔇':'🔊'}</button></div>`;
+  const mine=myTurn(),cur=S.players[S.turn],host=S.host==me();
+  $('bot').innerHTML=`${S.status==='done'?`<div class="win">🏆 ${esc(S.players[S.winner].name)} wins!</div>`:''}
+  <div class="dz" style="--c:${COL[cur.arm]}">${diceHTML(S.last||1,mine&&!S.dice?'can':'')}</div>
+  <div class="log">${S.status==='done'?'':mine?(S.dice?'Tap a glowing piece':'Your turn — tap the dice'):esc(cur.name)+"'s turn"}</div>
+  <div class="mut" style="text-align:center">${esc(S.log)}</div>
+  ${S.status==='done'&&host?'<button class="btn" data-act="again">Play again</button>':''}
+  <button class="btn gh" data-act="leave">Leave room</button>`;
+  if(prevP)animate(prevP);else{const tk=$('tk');tk.classList.add('nt');layout();void tk.getBoundingClientRect();tk.classList.remove('nt')}
+  prevP=S.pieces.map(a=>a.slice());
+  if(S.rc!==lastRc){if(!skipRc&&lastRc!==undefined&&$('dice')){$('dice').classList.add('rl');sfx.roll()}lastRc=S.rc;skipRc=false}
+  if(S.log!==lastLog){const l=S.log||'';if(lastLog&&l){if(/captured/.test(l)){toast('💥 Captured!');sfx.cap();buzz(70)}else if(/home!/.test(l)){toast('🏠 Home!');sfx.home()}else if(/wins/.test(l)){toast('🏆 '+l);sfx.win();confetti()}}lastLog=l}
+  const tm=!!(mine&&!S.dice&&S.status==='playing');if(tm&&!lastTm){sfx.turn();buzz(30)}lastTm=tm;
+  clearTimeout(autoT);
+  if(mine&&S.dice){const t=S.turn,rc=S.rc,mv=S.pieces[t].map((a,i)=>i).filter(i=>mov(S.pieces[t][i],S.dice));if(mv.length&&new Set(mv.map(i=>S.pieces[t][i])).size===1)autoT=setTimeout(()=>{if(S&&S.rc===rc&&S.dice&&myTurn())move(mv[0])},650)}
+  if(DEMO)botTick();
+}
+app.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  if(!AC&&!muted)snd(1,.01,'sine',.0001);try{AC&&AC.resume()}catch(x){}
+  const a=t.dataset.act;
+  if(a==='create')create();else if(a==='demo')demo();else if(a==='mute'){muted=!muted;try{localStorage.setItem('ludo-mute',muted?'1':'0')}catch(x){}t.textContent=muted?'🔇':'🔊'}else if(a==='join')join();else if(a==='start')start();
+  else if(a==='roll'){if(rolling)return;rolling=true;skipRc=true;sfx.roll();buzz(25);t.classList.add('rl');const iv=setInterval(()=>{const d=$('dice');if(d)d.innerHTML=pips(1+Math.floor(Math.random()*6))},90);setTimeout(()=>{clearInterval(iv);rolling=false;roll()},560)}
+  else if(a==='move')move(+t.dataset.i);else if(a==='again')again();else if(a==='leave')leave();
+  else if(a==='pc'){maxSel=+t.dataset.n;document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('on',b===t));$('cap').textContent=capt(maxSel)}
+  else if(a==='copy'){try{navigator.clipboard.writeText(S.code);t.textContent='Copied!'}catch(x){t.textContent=S.code}}
+});
+render();
+(async()=>{
+  try{
+    if(firebaseConfig.apiKey==='YOUR_API_KEY')throw new Error('cfg');
+    const fb=initializeApp(firebaseConfig),fs=getFirestore(fb);
+    await signInAnonymously(getAuth(fb));
+    // Firestore has no nested arrays, so store pieces as {p0:[..],p1:[..]}
+    const enc=d=>({...d,pieces:Object.fromEntries((d.pieces||[]).map((a,i)=>['p'+i,a]))});
+    const dec=d=>({...d,pieces:Object.keys(d.pieces||{}).sort().map(k=>d.pieces[k])});
+    const snap=s=>({exists:s.exists(),data:()=>s.exists()?dec(s.data()):undefined});
+    db={doc:path=>({
+      get:async()=>snap(await getDoc(fdoc(fs,path))),
+      set:d=>setDoc(fdoc(fs,path),enc(d)),
+      onSnapshot:(next,err)=>onSnapshot(fdoc(fs,path),s=>next(snap(s)),err)
+    })};
+  }catch(e){db=null;msg=e.message==='cfg'?'Firebase is not configured yet. See README.md.':'Could not connect to Firebase: '+(e.code||e.message)}
+  if(!S)render();
+})();
+</script></body></html>
