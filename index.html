@@ -71,6 +71,14 @@ svg{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 14px rgba(0,0,
 .log{text-align:center;font-weight:700;min-height:22px;transition:color .3s}
 .log.me{font-size:17px;font-weight:800;text-shadow:0 0 16px color-mix(in srgb,var(--c,#ffd166) 65%,transparent)}
 .win{font:900 26px "Trebuchet MS",system-ui;text-align:center;color:#ffd166;margin:8px 0;text-shadow:0 0 26px rgba(255,209,102,.8),0 4px 0 rgba(0,0,0,.4)}
+.score{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:6px 8px;margin:4px auto 8px;max-width:360px}
+.srow{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;font:800 15px "Trebuchet MS",system-ui;color:#fff}
+.srow+.srow{margin-top:2px}
+.srow.gold{background:linear-gradient(90deg,rgba(255,209,102,.25),rgba(255,133,0,.12));border:1px solid rgba(255,209,102,.5)}
+.srow.lz{background:rgba(255,255,255,.06);color:var(--mut)}
+.smd{width:24px;text-align:center;flex:none}
+.srk{margin-left:auto;color:var(--mut);font-weight:900}
+.srow.gold .srk{color:#ffd166}
 .win span{display:inline-block;animation:winl .6s var(--es) backwards;animation-delay:calc(var(--i)*.05s)}@keyframes winl{from{opacity:0;transform:translateY(14px) scale(.6)}}
 .logo span{display:inline-block;animation:fl 1.8s ease-in-out infinite alternate}.logo span:nth-child(2){animation-delay:.2s}.logo span:nth-child(3){animation-delay:.4s}.logo span:nth-child(4){animation-delay:.6s}@keyframes fl{to{transform:translateY(-8px) rotate(-4deg)}}
 body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(40% 30% at 20% 20%,#e5383b33,transparent),radial-gradient(40% 30% at 80% 30%,#2f80ed33,transparent),radial-gradient(40% 30% at 50% 90%,#fcc41933,transparent);animation:bgm 10s ease-in-out infinite alternate}@keyframes bgm{to{transform:translateY(-2%) scale(1.06)}}
@@ -104,8 +112,31 @@ body.hit #app{animation:shake .3s var(--em)}
 .star.tw{transform-box:fill-box;transform-origin:center;animation:tw .5s var(--es)}
 .chips.dealin .chip{animation:dealin .5s var(--eo) backwards;animation-delay:calc(var(--i,0)*.07s)}
 @media (hover:hover){.btn:hover:not(:disabled){filter:brightness(1.07);transform:translateY(-1px)}.pill:hover{border-color:rgba(255,255,255,.55)}.chip:hover:not(.on){opacity:1}}
+.chat-fab{position:fixed;right:16px;bottom:84px;width:52px;height:52px;border:0;border-radius:50%;z-index:12;padding:0;display:grid;place-items:center;background:linear-gradient(#5dd6ff,#2f80ed);color:#08263f;font-size:22px;box-shadow:0 5px 0 #1b4f9c,0 12px 20px rgba(0,0,0,.35);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.chat-fab:active{transform:translateY(3px);box-shadow:0 2px 0 #1b4f9c}
+.chat-fab[hidden]{display:none}
+.cbadge{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#d92d4f;color:#fff;font:800 12px/20px "Trebuchet MS",system-ui;text-align:center;box-shadow:0 0 0 2px #1a1048}
+.cbadge[hidden]{display:none}
+.chat-bd{position:fixed;inset:0;z-index:39;background:rgba(10,5,30,.62);opacity:0;visibility:hidden;transition:opacity var(--tm) var(--em)}
+.chat-sheet{position:fixed;left:0;right:0;bottom:var(--kb,0px);z-index:40;height:52vh;display:flex;flex-direction:column;visibility:hidden;transform:translateY(101%);border-radius:20px 20px 0 0;background:linear-gradient(160deg,rgba(43,26,110,.98),rgba(26,16,72,.98));border:1px solid rgba(255,255,255,.16);box-shadow:0 -14px 44px rgba(0,0,0,.65);transition:transform var(--te) var(--eo),visibility 0s linear var(--te);padding-bottom:env(safe-area-inset-bottom,0px)}
+body.chat-open .chat-bd{opacity:1;visibility:visible}
+body.chat-open .chat-sheet{visibility:visible;transform:none;transition:transform var(--te) var(--eo),visibility 0s}
+.chead{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;font-weight:900;font-size:17px;border-bottom:1px solid rgba(255,255,255,.12)}
+.ccl{width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:17px;cursor:pointer}
+.cmsgs{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 12px}
+.m{max-width:82%;padding:8px 12px;border-radius:14px;margin:6px 0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);font-size:15px;overflow-wrap:anywhere}
+.m.me{margin-left:auto;background:rgba(47,128,237,.45);border-color:rgba(93,214,255,.55)}
+.m b{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
+.m.me b{color:#5dd6ff}
+.m time{display:block;font-size:11px;color:rgba(255,255,255,.65);text-align:right;margin-top:2px}
+.m.empty{background:none;border:0;color:var(--mut);text-align:center;max-width:none}
+.crow{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.14);background:rgba(14,8,44,.92)}
+.crow input{flex:1;width:auto;min-width:0;height:46px}
+.sbtn{width:auto;min-width:76px;height:44px;padding:0 16px;margin:0;font-size:16px;border:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media(max-width:600px){body{background-attachment:scroll}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.08s!important}body::before,.logo span,.dice.can,.dice.wait,.hint,.pulse,.chip.on::after{animation:none!important}.toast,.turnbanner{animation:sfade 1.5s linear forwards!important}@keyframes sfade{0%,85%{opacity:1}100%{opacity:0}}}
+@media (prefers-reduced-motion:reduce){.chat-sheet{transform:none!important;opacity:0;transition:opacity .08s linear,visibility 0s linear .08s!important}body.chat-open .chat-sheet{opacity:1;visibility:visible;transition:opacity .08s linear!important}}
 </style></head><body><div id="app"></div>
 <script type="module">
 import {firebaseConfig} from './firebase-config.js';
@@ -113,7 +144,7 @@ import {firebaseConfig} from './firebase-config.js';
 const COL=['#e5383b','#2eb872','#fcc419','#2f80ed','#9b5de5','#ff8c42'],DK=['#9d1216','#17794a','#b58900','#1a55ad','#6a3aa8','#c25a14'];
 const ARMS={2:[0,2],3:[0,1,2],4:[0,1,2,3],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
 const app=document.getElementById('app');
-let db=null,ref=null,unsub=null,S=null,G=null,msg='',built='',disp=[],prevP=null,maxSel=4,rolling=false,_id=null,DEMO=false,botT=null,autoT=null,lastRc,lastLog='',lastTm=false,muted=false,AC=null,skipRc=false,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches,prevTurn=-1,prevPcount=0,lastCode='',nmT=null,nmKey='',rollIv=null,sixUntil=0,lastTop='',lastBot='',freshDeal=false;
+let db=null,ref=null,unsub=null,S=null,G=null,msg='',built='',disp=[],prevP=null,maxSel=4,rolling=false,_id=null,DEMO=false,botT=null,autoT=null,lastRc,lastLog='',lastTm=false,muted=false,AC=null,skipRc=false,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches,prevTurn=-1,prevPcount=0,lastCode='',nmT=null,nmKey='',rollIv=null,sixUntil=0,lastTop='',lastBot='',freshDeal=false,uid=null,unsubMsgs=null,msgs=[],msgsUnread=0,seenMsgs=new Set(),chatOpen=false,prevFocus=null,lastChatSend=0;
 try{matchMedia('(prefers-reduced-motion:reduce)').addEventListener('change',e=>{reduced=e.matches})}catch(e){}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const rid=()=>Math.random().toString(36).slice(2,10),$=id=>document.getElementById(id);
@@ -218,14 +249,15 @@ document.body.appendChild(e);setTimeout(()=>e.remove(),5500)}}
 async function sub(c){
   ref=db.doc('rooms/'+c);unsub&&unsub();
   unsub=ref.onSnapshot(s=>{if(s.exists){S=s.data();render()}},e=>{leave();setMsg(e.message||'Connection lost')});
+  if(!DEMO&&db)try{watchMsgs(c)}catch(e){}
 }
-function leave(){DEMO=false;ref=null;clearTimeout(botT);clearTimeout(nmT);clearTimeout(autoT);clearInterval(rollIv);rollIv=null;sixUntil=0;nmKey='';lastTop=lastBot='';unsub&&unsub();unsub=null;S=null;built='';prevP=null;prevTurn=-1;prevPcount=0;lastCode='';render()}
+function leave(){closeChat(true);unsubMsgs&&unsubMsgs();unsubMsgs=null;msgs=[];msgsUnread=0;seenMsgs=new Set();DEMO=false;ref=null;clearTimeout(botT);clearTimeout(nmT);clearTimeout(autoT);clearInterval(rollIv);rollIv=null;sixUntil=0;nmKey='';lastTop=lastBot='';unsub&&unsub();unsub=null;S=null;built='';prevP=null;prevTurn=-1;prevPcount=0;lastCode='';render()}
 async function create(){
   const name=val('nm');if(!name)return setMsg('Enter your name first');
   saveName(name);
   try{
     let c;for(let t=0;t<6;t++){c=gen();if(!(await db.doc('rooms/'+c).get()).exists)break}
-    await db.doc('rooms/'+c).set({v:2,code:c,host:me(),max:maxSel,n:Math.max(4,maxSel),status:'lobby',rnd:0,players:[{id:me(),name}],pieces:[],turn:0,dice:null,last:1,winner:null,log:''});
+    await db.doc('rooms/'+c).set({v:2,code:c,host:me(),max:maxSel,n:Math.max(4,maxSel),status:'lobby',rnd:0,players:[{id:me(),name}],pieces:[],turn:0,dice:null,last:1,winner:null,fin:[],log:''});
     await sub(c);
   }catch(e){setMsg('Room would not open — give it another go')}
 }
@@ -251,7 +283,7 @@ async function join(){
 function save(ns){S=ns;render();ref&&ref.set(ns).catch(e=>setMsg('Lost a beat — syncing…'))}
 function start(){
   const cnt=S.players.length,arms=ARMS[cnt];
-  save({...S,status:'playing',n:Math.max(4,cnt),rnd:S.rnd+1,players:S.players.map((p,i)=>({...p,arm:arms[i]})),pieces:S.players.map(()=>[0,0,0,0]),turn:0,dice:null,last:1,winner:null,log:'Game started!'});
+  save({...S,status:'playing',n:Math.max(4,cnt),rnd:S.rnd+1,players:S.players.map((p,i)=>({...p,arm:arms[i]})),pieces:S.players.map(()=>[0,0,0,0]),turn:0,dice:null,last:1,winner:null,fin:[],log:'Game started!'});
 }
 const myIdx=()=>S.players.findIndex(p=>p.id===me());
 const myTurn=()=>S&&S.status==='playing'&&(DEMO?S.turn===0:myIdx()===S.turn);
@@ -270,16 +302,24 @@ function move(i,f){
     if(idx%13!==8&&idx%13!==3)S.players.forEach((q,j)=>{if(j!==t)pcs[j]=pcs[j].map(b=>(b>=1&&b<L&&(13*q.arm+7+b)%L===idx)?(cap=true,0):b)});
   }
   const won=pcs[t].every(b=>b===L+5),extra=n===6||cap||np===L+5,nm=S.players[t].name;
-  save({...S,pieces:pcs,dice:null,turn:(won||extra)?t:(t+1)%S.players.length,status:won?'done':'playing',winner:won?t:null,
-    log:won?`${nm} wins! 🎉`:`${nm} moved`+(cap?' and captured a piece!':np===L+5?' a piece home!':'')+(extra?' — goes again':'')});
+  let fin=S.fin||[];
+  if(won&&fin.indexOf(t)<0)fin=fin.concat([t]);
+  const left=S.players.length-fin.length;
+  const done=fin.length>=S.players.length-1;
+  let nt;
+  if(won||!extra){let n2=(t+1)%S.players.length;while(fin.indexOf(n2)>=0&&n2!==t)n2=(n2+1)%S.players.length;nt=n2}
+  else nt=t;
+  const w=fin.length?fin[0]:null;
+  save({...S,pieces:pcs,dice:null,turn:nt,fin,status:done?'done':'playing',winner:done?w:null,
+    log:done?`${S.players[w].name} wins! 🎉`:won?`${nm} finished — ${left} player${left===1?'':'s'} to go 🏁`:`${nm} moved`+(cap?' and captured a piece!':np===L+5?' a piece home!':'')+(extra?' — goes again':'')});
 }
-function again(){save({...S,status:'lobby',pieces:[],turn:0,dice:null,winner:null,log:''})}
+function again(){save({...S,status:'lobby',pieces:[],turn:0,dice:null,winner:null,fin:[],log:''})}
 
 function demo(){
   DEMO=true;ref=null;maxSel=5;
   const nm=['You','Aarav','Riya','Kabir','Meera'];
-  S={v:2,code:'DEMO',host:me(),max:5,n:5,status:'playing',rnd:1,players:nm.map((n,i)=>({id:i?'bot'+i:me(),name:n,arm:i})),pieces:[[0,9,27,67],[0,15,38,0],[4,33,0,0],[21,0,52,70],[0,11,0,60]],turn:0,dice:null,last:1,winner:null,log:'Demo: you are Red, the others are bots.'};
-  render();
+  S={v:2,code:'DEMO',host:me(),max:5,n:5,status:'playing',rnd:1,players:nm.map((n,i)=>({id:i?'bot'+i:me(),name:n,arm:i})),pieces:[[0,9,27,67],[0,15,38,0],[4,33,0,0],[21,0,52,70],[0,11,0,60]],turn:0,dice:null,last:1,winner:null,fin:[],log:'Demo: you are Red, the others are bots.'};
+render();
 }
 function botTick(){
   clearTimeout(botT);
@@ -306,17 +346,24 @@ const PIPS={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
 const pips=v=>{let h='';for(let c=1;c<10;c++)h+=PIPS[v].includes(c)?'<i class="pip"></i>':'<i></i>';return h};
 const diceHTML=(v,cls)=>`<div id="dice" class="dice ${cls}" ${cls=='can'?'data-act="roll"':''}>${pips(v)}</div>`;
 function render(){
+  const cf=$('chatFab');if(cf){cf.hidden=!S||DEMO||S.status==='done';if(cf.hidden&&chatOpen)closeChat(true)}
   if(!S){app.innerHTML=home($('nm')?$('nm').value:null,$('cd')?$('cd').value:'');built='';return}
   if(S.status==='lobby'){app.innerHTML=lobby();built='';return}
   G=gm(S.n);const key=S.code+':'+S.rnd;
   if(built!==key||!$('bdw')){built=key;app.innerHTML='<div id="top"></div><div id="bdw"></div><div id="tbw"></div><div id="bot"></div>';$('bdw').innerHTML=boardSVG(G);disp=S.pieces.map(a=>a.slice());prevP=null;lastTop=lastBot='';freshDeal=true}
-  const top=`<div class="chips${freshDeal?' dealin':''}">${S.players.map((p,j)=>`<div class="chip ${j==S.turn&&S.status=='playing'?'on':''}${S.status==='done'?(j===S.winner?' w':' l'):''}" style="--c:${COL[p.arm]};--i:${j}"${j==S.turn&&S.status=='playing'?' aria-current="true"':''}><b>${AV[p.arm]}</b>${esc(p.name)}${p.id==me()?' (you)':''} <em>${S.pieces[j].filter(a=>a===G.L+5).length}/4</em></div>`).join('')}<button class="mute" data-act="mute">${muted?'🔇':'🔊'}</button></div>`;freshDeal=false;
+  const fin=S.fin||[];
+  const top=`<div class="chips${freshDeal?' dealin':''}">${S.players.map((p,j)=>`<div class="chip ${j==S.turn&&S.status=='playing'?'on':''}${S.status==='done'?(j===S.winner?' w':' l'):''}" style="--c:${COL[p.arm]};--i:${j}"${j==S.turn&&S.status=='playing'?' aria-current="true"':''}><b>${AV[p.arm]}</b>${esc(p.name)}${p.id==me()?' (you)':''}${fin.indexOf(j)>=0&&S.status==='playing'?' 🏁':''} <em>${S.pieces[j].filter(a=>a===G.L+5).length}/4</em></div>`).join('')}<button class="mute" data-act="mute">${muted?'🔇':'🔊'}</button></div>`;freshDeal=false;
   if(top!==lastTop){$('top').innerHTML=top;lastTop=top}
   const mine=myTurn(),cur=S.players[S.turn],host=S.host==me();
   const wn=S.status==='done'&&S.winner!=null?[...S.players[S.winner].name].map((ch,i)=>`<span style="--i:${i}">${esc(ch)}</span>`).join(''):'';
   const dc=rolling?'rl':mine&&!S.dice?'can':(!S.dice&&S.status==='playing'&&!mine?'wait':(!S.dice?'idle':''));
-  const bot=`${S.status==='done'?`<div class="win">🏆 ${wn} wins!</div>`:''}
-  <div class="dz" style="--c:${COL[cur.arm]}">${diceHTML(S.last||1,dc)}</div>
+  const ordn=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+  let score='';
+  if(S.status==='done'){const o=fin.concat(S.players.map((_,i)=>i).filter(i=>fin.indexOf(i)<0));
+    score=`<div class="win">🏆 ${wn} wins!</div><div class="score">`+o.map((pi,j)=>{const p=S.players[pi],lz=j===o.length-1&&fin.length<S.players.length;
+      return `<div class="srow${j===0?' gold':''}${lz?' lz':''}"><span class="smd">${lz?'😵':['🥇','🥈','🥉'][j]||'▫️'}</span><b>${esc(p.name)}</b><span class="srk">${lz?'Loser':ordn(j+1)}</span></div>`}).join('')+`</div>`}
+  const bot=`${score}
+  ${S.status==='done'?'':`<div class="dz" style="--c:${COL[cur.arm]}">${diceHTML(S.last||1,dc)}</div>`}
   <div class="log${mine&&S.status==='playing'?' me':''}" aria-live="polite" style="--c:${COL[cur.arm]}">${S.status==='done'?'':mine?(S.dice?'Tap a glowing piece':'Your turn — tap the dice'):esc(cur.name)+"'s turn"}</div>
   <div class="mut" style="text-align:center;margin-top:6px" aria-live="polite">${esc(S.log)}</div>
   ${S.status==='done'&&host?'<button class="btn" data-act="again">Play again</button>':''}
@@ -332,20 +379,59 @@ function render(){
       if(!reduced){const sh=()=>{const e=$('dice');if(e&&!rolling)e.innerHTML=pips(1+Math.floor(Math.random()*6))};sh();const iv=setInterval(sh,150);setTimeout(()=>{clearInterval(iv);const e=$('dice');if(e&&S){e.innerHTML=pips(S.dice||S.last||1);e.classList.add('land');setTimeout(()=>e.classList.remove('land'),220)}},300)}}
     lastRc=S.rc;skipRc=false;
     if(S.last===6){buzz([15,40,15]);toast('✨ Lucky 6!',1);if(!reduced){const d=$('dice');d&&d.classList.add('six');sixUntil=Date.now()+1100;setTimeout(()=>{const x=$('dice');x&&x.classList.remove('six')},1100)}}}
-  if(S.log!==lastLog){const l=S.log||'';if(lastLog&&l){if(/captured/.test(l)){toast('💥 Captured!',1);sfx.cap();buzz(70);if(!reduced){document.body.classList.add('hit');const fl=document.createElement('div');fl.className='flash';document.body.appendChild(fl);setTimeout(()=>{document.body.classList.remove('hit');fl.remove()},480)}}else if(/home!/.test(l)){toast('🏠 Home!',1);sfx.home()}else if(/goes again/.test(l)){toast('↻ Go again!');buzz(20);const d=$('dice');d&&d.classList.add('bonus');setTimeout(()=>{const x=$('dice');x&&x.classList.remove('bonus')},460)}else if(/wins/.test(l)){toast('🏆 Winner!',1);sfx.win();confetti()}}lastLog=l}
+  if(S.log!==lastLog){const l=S.log||'';if(lastLog&&l){if(/captured/.test(l)){toast('💥 Captured!',1);sfx.cap();buzz(70);if(!reduced){document.body.classList.add('hit');const fl=document.createElement('div');fl.className='flash';document.body.appendChild(fl);setTimeout(()=>{document.body.classList.remove('hit');fl.remove()},480)}}else if(/home!/.test(l)){toast('🏠 Home!',1);sfx.home()}else if(/goes again/.test(l)){toast('↻ Go again!');buzz(20);const d=$('dice');d&&d.classList.add('bonus');setTimeout(()=>{const x=$('dice');x&&x.classList.remove('bonus')},460)}else if(/ finished — /.test(l)){toast('🏁 '+l.slice(0,l.indexOf(' finished'))+' finished!',1);sfx.home()}else if(/wins/.test(l)){toast('🏆 Winner!',1);sfx.win();confetti()}}lastLog=l}
   const tm=!!(mine&&!S.dice&&S.status==='playing'&&tc);if(tm&&!lastTm){sfx.turn();buzz(30);
     const bn=document.createElement('div');bn.className='turnbanner';bn.style.setProperty('--c',COL[S.players[S.turn].arm]);bn.textContent="YOUR TURN!";const tw=$('tbw');if(tw){const ex=tw.querySelector('.toast');if(ex)ex.style.top='50px';tw.appendChild(bn)}else document.body.appendChild(bn);setTimeout(()=>bn.remove(),1500)}
   lastTm=tm;
   if(S.status==='playing'&&S.dice!=null&&!S.pieces[S.turn].some(a=>mov(a,S.dice))){
     const t2=S.turn,n2=S.dice,rc2=S.rc||0;
     if(nmKey!==rc2){clearTimeout(nmT);nmKey=rc2;const dd=$('dice');dd&&dd.classList.add('dead');nmT=setTimeout(()=>{
-      if(S&&S.turn===t2&&S.dice===n2&&S.rc===rc2){buzz(15);toast('🚫 No move');save({...S,dice:null,turn:(t2+1)%S.players.length})}
+      if(S&&S.turn===t2&&S.dice===n2&&(S.rc||0)===rc2){buzz(15);toast('🚫 No move');const fn=S.fin||[];let n3=(t2+1)%S.players.length;while(fn.indexOf(n3)>=0&&n3!==t2)n3=(n3+1)%S.players.length;save({...S,dice:null,turn:n3})}
     },750)}
   }else{clearTimeout(nmT);nmT=null;nmKey=''}
   clearTimeout(autoT);
   if(mine&&S.dice){const t=S.turn,rc=S.rc,mv=S.pieces[t].map((a,i)=>i).filter(i=>mov(S.pieces[t][i],S.dice));if(mv.length&&new Set(mv.map(i=>S.pieces[t][i])).size===1)autoT=setTimeout(()=>{if(S&&S.rc===rc&&S.dice&&myTurn())move(mv[0])},500)}
   if(DEMO)botTick();
 }
+// ---------- chat ----------
+const hhmm=ts=>{const d=new Date(+ts||0);return isFinite(d.getTime())?String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'):''};
+const setBadge=n=>{const b=$('cbadge');if(!b)return;b.hidden=!n;b.textContent=n>99?'99+':n};
+function renderMsgs(list){const box=$('msgs');if(!box)return;
+  const asc=(list||[]).slice().sort((a,b)=>(a.ts||0)-(b.ts||0));
+  const near=box.scrollHeight-box.scrollTop-box.clientHeight<70||!box.childElementCount;
+  if(!asc.length){box.innerHTML='<div class="m empty">Say hi 👋</div>';return}
+  box.innerHTML=asc.map(m=>{const own=m.i===me(),pl=S&&S.players&&S.players.find(p=>p.id===m.i);
+    return '<div class="m'+(own?' me':'')+'" data-id="'+esc(m.id)+'"><b style="--c:'+(pl&&pl.arm!=null?COL[pl.arm]:'#b9b3e6')+'">'+esc(own?'You':(m.n||'Player'))+'</b><span>'+esc(m.t||'')+'</span><time>'+hhmm(m.ts)+'</time></div>'}).join('');
+  if(near)requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight})}
+function chatChanged(){renderMsgs(msgs);setBadge(msgsUnread)}
+function watchMsgs(code){unsubMsgs&&unsubMsgs();msgs=[];msgsUnread=0;seenMsgs=new Set();
+  let first=true;
+  unsubMsgs=db.watchMsgs(code,d=>{if(!d)return;msgs=d;
+    if(first){first=false;msgs.forEach(m=>seenMsgs.add(m.id))}
+    else if(!chatOpen)for(const m of msgs)if(!seenMsgs.has(m.id)&&m.i!==me()){msgsUnread++;seenMsgs.add(m.id)}
+    chatChanged()})}
+function chatToggle(){const f=$('chatFab');if(!f||!S||DEMO)return;
+  if(!chatOpen){prevFocus=document.activeElement;chatOpen=true;document.body.classList.add('chat-open');f.setAttribute('aria-expanded','true');msgs.forEach(m=>seenMsgs.add(m.id));msgsUnread=0;setBadge(0);renderMsgs(msgs);
+    const ci=$('chatIn');if(ci)ci.focus();
+    setTimeout(()=>{const b=$('msgs');if(b)b.scrollTop=b.scrollHeight;vv()},80)}
+  else closeChat()}
+function closeChat(restore){chatOpen=false;document.body.classList.remove('chat-open');const f=$('chatFab');if(f)f.setAttribute('aria-expanded','false');if(restore!==true&&prevFocus&&prevFocus.focus)try{prevFocus.focus()}catch(e){}prevFocus=null}
+function chatSend(t){if(!S||DEMO||!db)return;const k=myIdx();const n=(k>=0&&S.players[k]&&S.players[k].name)||savedName()||'Player';
+  db.sendMsg({code:S.code,u:uid||'',i:me(),n:n.slice(0,14),t:t.slice(0,200),ts:Date.now()}).catch(()=>toast('Message not sent'))}
+function sendChatMsg(){const i=$('chatIn');if(!i)return;const t=(i.value||'').trim().slice(0,200);if(!t)return;
+  if(!S||DEMO||!db)return;if(Date.now()-lastChatSend<650)return;lastChatSend=Date.now();
+  chatSend(t);i.value='';const sb=$('chatSend');if(sb)sb.disabled=true}
+function vv(){const v=window.visualViewport;if(!v)return;document.documentElement.style.setProperty('--kb',Math.max(0,innerHeight-v.height-v.offsetTop)+'px')}
+if(window.visualViewport)try{visualViewport.addEventListener('resize',vv)}catch(e){}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t)return;
+  const a=t.dataset.act;if(a==='chat')chatToggle();else if(a==='chatclose')closeChat();else if(a==='send')sendChatMsg()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&chatOpen){closeChat();return}
+  if(e.target.id!=='chatIn')return;
+  if(e.isComposing||e.keyCode===229)return;
+  if(e.key==='Enter'){e.preventDefault();sendChatMsg()}});
+document.addEventListener('input',e=>{if(e.target.id!=='chatIn')return;
+  if(e.target.value.length>200)e.target.value=e.target.value.slice(0,200);
+  const sb=$('chatSend');if(sb)sb.disabled=!e.target.value.trim()});
 app.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;
   if(!AC&&!muted)snd(1,.01,'sine',.0001);try{AC&&AC.resume()}catch(x){}
@@ -358,15 +444,23 @@ app.addEventListener('click',e=>{
   else if(a==='copy'){try{navigator.clipboard.writeText(S.code);t.textContent='🎯 Copied!';t.classList.add('copypulse');setTimeout(()=>t.classList.remove('copypulse'),450)}catch(x){t.textContent=S.code}}
 });
 render();
+document.body.insertAdjacentHTML('beforeend',`
+<div class="chat-bd" data-act="chatclose"></div>
+<button class="chat-fab" id="chatFab" data-act="chat" aria-expanded="false" aria-controls="chatPanel" aria-label="Room chat" hidden>💬<span class="cbadge" id="cbadge" hidden></span></button>
+<section class="chat-sheet" id="chatPanel" role="dialog" aria-modal="true" aria-label="Room chat">
+ <header class="chead"><b>Room chat</b><button class="ccl" data-act="chatclose" aria-label="Close chat">✕</button></header>
+ <div class="cmsgs" id="msgs" role="log" aria-live="polite" aria-relevant="additions"></div>
+ <div class="crow"><label class="sr" for="chatIn">Message</label><input id="chatIn" maxlength="200" placeholder="Say something…" autocomplete="off" enterkeyhint="send"><button class="btn alt sbtn" id="chatSend" data-act="send" disabled>Send</button></div>
+</section>`);
 (async()=>{
   try{
     if(firebaseConfig.apiKey==='YOUR_API_KEY')throw new Error('cfg');
-    const [{initializeApp},{getAuth,signInAnonymously},{getFirestore,doc:fdoc,getDoc,setDoc,onSnapshot,runTransaction}]=await Promise.all([
+    const [{initializeApp},{getAuth,signInAnonymously},{getFirestore,doc:fdoc,getDoc,setDoc,onSnapshot,runTransaction,collection,query,orderBy,limit,addDoc}]=await Promise.all([
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')]);
     const fb=initializeApp(firebaseConfig),fs=getFirestore(fb);
-    await signInAnonymously(getAuth(fb));
+    uid=(await signInAnonymously(getAuth(fb))).user.uid;
     // Firestore has no nested arrays, so store pieces as {p0:[..],p1:[..]}
     const enc=d=>({...d,pieces:Object.fromEntries((d.pieces||[]).map((a,i)=>['p'+i,a]))});
     const dec=d=>({...d,pieces:Object.keys(d.pieces||{}).sort().map(k=>d.pieces[k])});
@@ -376,7 +470,9 @@ render();
       set:d=>setDoc(fdoc(fs,path),enc(d)),
       onSnapshot:(next,err)=>onSnapshot(fdoc(fs,path),s=>next(snap(s)),err)
     }),
-    tx:(path,fn)=>runTransaction(fs,async t=>{const r=fdoc(fs,path);const s=await t.get(r);if(!s.exists())throw Error('gone');const nd=fn(dec(s.data()));if(nd)t.set(r,enc(nd))})};
+    tx:(path,fn)=>runTransaction(fs,async t=>{const r=fdoc(fs,path);const s=await t.get(r);if(!s.exists())throw Error('gone');const nd=fn(dec(s.data()));if(nd)t.set(r,enc(nd))}),
+    sendMsg:o=>addDoc(collection(fs,'rooms/'+o.code+'/msgs'),{u:o.u,i:o.i,n:o.n,t:o.t,ts:o.ts}),
+    watchMsgs:(code,cb)=>onSnapshot(query(collection(fs,'rooms/'+code+'/msgs'),orderBy('ts','desc'),limit(50)),s=>cb(s.docs.map(d=>({id:d.id,...d.data()}))),e=>cb(null,e))};
   }catch(e){db=null;msg=e.message==='cfg'?'Firebase is not configured yet. See README.md.':'Arcade offline — check your connection'}
   if(!S)render();
 })();

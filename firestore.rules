@@ -13,6 +13,27 @@ service cloud.firestore {
         && (resource == null || resource.data.status != 'playing'
             || request.resource.data.players.size() == resource.data.players.size());
       allow delete: if false;
+
+      match /msgs/{msgId} {
+        // List queries are provable from the query alone: this read rule
+        // references only request.auth/path, so orderBy+limit queries pass.
+        allow read: if request.auth != null && code.size() == 5;
+        allow create: if request.auth != null
+          && code.size() == 5
+          && exists(/databases/$(database)/documents/rooms/$(code))
+          && request.resource.data.keys().hasOnly(['u','i','n','t','ts'])
+          && request.resource.data.u is string
+          && request.resource.data.u == request.auth.uid
+          && request.resource.data.i is string
+          && request.resource.data.i.size() >= 1 && request.resource.data.i.size() <= 64
+          && request.resource.data.n is string
+          && request.resource.data.n.size() >= 1 && request.resource.data.n.size() <= 14
+          && request.resource.data.t is string
+          && request.resource.data.t.size() >= 1 && request.resource.data.t.size() <= 200
+          && request.resource.data.ts is int
+          && request.resource.data.ts > 0;
+        allow update, delete: if false;
+      }
     }
   }
 }
