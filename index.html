@@ -294,10 +294,10 @@ function botTick(){
   },S.dice?950:850);
 }
 // ---------- views ----------
-const home=()=>`<div class="logo"><span>L</span><span>U</span><span>D</span><span>O</span></div><div class="sub">Play with friends · 2–6 players</div>
-<div class="panel pnl" style="animation-delay:.06s"><label>Your name</label><input id="nm" maxlength="14" value="${esc(savedName())}" placeholder="Enter your name">${db?'':'<div class="err">Connecting to the game server…</div>'}</div>
+const home=(nm,cd)=>`<div class="logo"><span>L</span><span>U</span><span>D</span><span>O</span></div><div class="sub">Play with friends · 2–6 players</div>
+<div class="panel pnl" style="animation-delay:.06s"><label>Your name</label><input id="nm" maxlength="14" value="${esc(nm!=null?nm:savedName())}" placeholder="Enter your name">${db?'':'<div class="err">Connecting to the game server…</div>'}</div>
 <div class="panel pnl" style="animation-delay:.16s"><label>Create a room — number of players</label><div class="pills">${[2,3,4,5,6].map(n=>`<button class="pill ${n==maxSel?'on':''}" data-act="pc" data-n="${n}">${n}</button>`).join('')}</div><div class="mut" id="cap">${capt(maxSel)}</div><button class="btn" data-act="create" ${db?'':'disabled'}>Create room</button></div>
-<div class="panel pnl" style="animation-delay:.26s"><label>Join with a room code</label><input id="cd" maxlength="5" placeholder="CODE" style="text-transform:uppercase;letter-spacing:6px;text-align:center"><button class="btn alt" data-act="join" ${db?'':'disabled'}>Join room</button></div><button class="btn gh" data-act="demo">▶ Watch a 5-player demo</button><div class="err" id="err">${esc(msg)}</div>`;
+<div class="panel pnl" style="animation-delay:.26s"><label>Join with a room code</label><input id="cd" maxlength="5" value="${esc(cd||'')}" placeholder="CODE" style="text-transform:uppercase;letter-spacing:6px;text-align:center"><button class="btn alt" data-act="join" ${db?'':'disabled'}>Join room</button></div><button class="btn gh" data-act="demo">▶ Watch a 5-player demo</button><div class="err" id="err">${esc(msg)}</div>`;
 const capt=n=>n==5?'Pentagon board':n==6?'Hexagon board':'Classic cross board';
 const lobby=()=>{const h=S.host==me(),flip=S.code!==lastCode;lastCode=S.code;const pop=S.players.length>prevPcount?S.players.length-1:-1;prevPcount=S.players.length;return `<div class="hd">LOBBY</div><div class="panel pnl" style="text-align:center;animation-delay:.06s"><div class="mut">Share this room code with your friends</div><div class="code">${flip?[...S.code].map((ch,i)=>`<span style="--i:${i}">${ch}</span>`).join(''):esc(S.code)}</div><button class="btn gh" data-act="copy">Copy code</button></div>
 <div class="panel pnl" style="animation-delay:.16s">${Array.from({length:S.max},(_,i)=>{const p=S.players[i];return p?`<div class="slot${i===pop?' pop':''}">👤 <b>${esc(p.name)}</b>${p.id==S.host?' · host':''}${p.id==me()?' · you':''}</div>`:'<div class="slot sh mut">Waiting for player…</div>'}).join('')}</div>
@@ -306,7 +306,7 @@ const PIPS={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
 const pips=v=>{let h='';for(let c=1;c<10;c++)h+=PIPS[v].includes(c)?'<i class="pip"></i>':'<i></i>';return h};
 const diceHTML=(v,cls)=>`<div id="dice" class="dice ${cls}" ${cls=='can'?'data-act="roll"':''}>${pips(v)}</div>`;
 function render(){
-  if(!S){app.innerHTML=home();built='';return}
+  if(!S){app.innerHTML=home($('nm')?$('nm').value:null,$('cd')?$('cd').value:'');built='';return}
   if(S.status==='lobby'){app.innerHTML=lobby();built='';return}
   G=gm(S.n);const key=S.code+':'+S.rnd;
   if(built!==key||!$('bdw')){built=key;app.innerHTML='<div id="top"></div><div id="bdw"></div><div id="tbw"></div><div id="bot"></div>';$('bdw').innerHTML=boardSVG(G);disp=S.pieces.map(a=>a.slice());prevP=null;lastTop=lastBot='';freshDeal=true}
