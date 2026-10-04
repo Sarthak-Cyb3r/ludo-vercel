@@ -4,6 +4,13 @@
 <title>Ludo with Friends</title>
 <meta name="theme-color" content="#2a1a6e">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🎲</text></svg>">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js">
+<link rel="modulepreload" href="./firebase-config.js">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--fg:#fff;--mut:#b9b3e6;--tm:160ms;--te:420ms;--eo:cubic-bezier(.22,1,.36,1);--em:cubic-bezier(.4,0,.2,1);--es:cubic-bezier(.34,1.56,.64,1);--er:cubic-bezier(.2,.8,.3,1)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-x:hidden}
@@ -33,8 +40,7 @@ input{width:100%;padding:13px;font:700 17px "Trebuchet MS",system-ui;border-radi
 .err{color:#ff8a8a;min-height:20px;text-align:center}
 .code{font:900 44px ui-monospace,monospace;letter-spacing:10px;text-align:center;background:rgba(0,0,0,.25);border-radius:14px;padding:12px;margin:8px 0}
 .slot{padding:10px 12px;background:rgba(255,255,255,.08);border-radius:12px;margin:6px 0}
-.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px;position:relative;padding-right:48px}
-.hd{font:900 36px/1 "Trebuchet MS",system-ui;text-align:center;letter-spacing:4px;margin:18px 0 2px;text-shadow:0 4px 0 #0005}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px;position:relative;padding-right:48px}.hd{font:900 36px/1 "Trebuchet MS",system-ui;text-align:center;letter-spacing:4px;margin:18px 0 2px;text-shadow:0 4px 0 #0005}
 .chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:2px solid transparent;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700;transition:transform .25s var(--eo),box-shadow .3s,filter .3s,opacity .3s}
 .chip em{font-style:normal;opacity:.85}
 .chip.on{transform:translateY(-2px) scale(1.05);border-color:var(--c);box-shadow:0 0 0 2px var(--c),0 0 18px var(--c),0 0 44px color-mix(in srgb,var(--c) 55%,transparent);background:rgba(255,255,255,.22)}
@@ -46,7 +52,6 @@ svg{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 14px rgba(0,0,
 .pulse{display:none;fill:none;stroke:#fff;stroke-width:.12;animation:pl .6s infinite alternate;transform-box:fill-box;transform-origin:center}
 .tk.mv .pulse{display:block}
 @keyframes pl{to{transform:scale(1.4);opacity:.3}}
-.dz{display:flex;align-items:center;justify-content:center;gap:16px;margin:16px 0 6px;min-height:84px}
 .dice{background:linear-gradient(145deg,#fff,#e4defa);border-radius:18px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:10px;border:1px solid rgba(255,255,255,.8);box-shadow:0 6px 0 #c9c3e8,0 14px 26px rgba(0,0,0,.45),inset 0 2px 0 #fff}
 .dice i{display:block}.dice .pip{background:radial-gradient(circle at 35% 30%,#3d2a8f,#1f1258);border-radius:50%;width:80%;height:80%;margin:auto;transition:opacity .2s}
 .dice.can{cursor:pointer;animation:bob .7s var(--em) infinite alternate;box-shadow:0 6px 0 #c9c3e8,0 0 0 3px color-mix(in srgb,var(--c,#fff) 55%,transparent),0 0 34px var(--c,#fff),0 0 64px color-mix(in srgb,var(--c,#fff) 30%,transparent),inset 0 2px 0 #fff}
@@ -139,12 +144,10 @@ body.chat-open .chat-sheet{visibility:visible;transform:none;transition:transfor
 @media (prefers-reduced-motion:reduce){.chat-sheet{transform:none!important;opacity:0;transition:opacity .08s linear,visibility 0s linear .08s!important}body.chat-open .chat-sheet{opacity:1;visibility:visible;transition:opacity .08s linear!important}}
 </style></head><body><div id="app"></div>
 <script type="module">
-import {firebaseConfig} from './firebase-config.js';
-
 const COL=['#e5383b','#2eb872','#fcc419','#2f80ed','#9b5de5','#ff8c42'],DK=['#9d1216','#17794a','#b58900','#1a55ad','#6a3aa8','#c25a14'];
 const ARMS={2:[0,2],3:[0,1,2],4:[0,1,2,3],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
 const app=document.getElementById('app');
-let db=null,ref=null,unsub=null,S=null,G=null,msg='',built='',disp=[],prevP=null,maxSel=4,rolling=false,_id=null,DEMO=false,botT=null,autoT=null,lastRc,lastLog='',lastTm=false,muted=false,AC=null,skipRc=false,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches,prevTurn=-1,prevPcount=0,lastCode='',nmT=null,nmKey='',rollIv=null,sixUntil=0,lastTop='',lastBot='',freshDeal=false,uid=null,unsubMsgs=null,msgs=[],msgsUnread=0,seenMsgs=new Set(),chatOpen=false,prevFocus=null,lastChatSend=0;
+let db=null,ref=null,unsub=null,S=null,G=null,msg='',built='',disp=[],prevP=null,maxSel=4,rolling=false,_id=null,DEMO=false,botT=null,autoT=null,lastRc,lastLog='',lastTm=false,muted=false,AC=null,skipRc=false,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches,prevTurn=-1,prevPcount=0,lastCode='',nmT=null,nmKey='',rollIv=null,sixUntil=0,lastTop='',lastBot='',freshDeal=false,uid=null,unsubMsgs=null,msgs=[],msgsUnread=0,seenMsgs=new Set(),chatOpen=false,prevFocus=null,lastChatSend=0,authReady=null;
 try{matchMedia('(prefers-reduced-motion:reduce)').addEventListener('change',e=>{reduced=e.matches})}catch(e){}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const rid=()=>Math.random().toString(36).slice(2,10),$=id=>document.getElementById(id);
@@ -256,6 +259,7 @@ async function create(){
   const name=val('nm');if(!name)return setMsg('Enter your name first');
   saveName(name);
   try{
+    if(authReady)await authReady;
     let c;for(let t=0;t<6;t++){c=gen();if(!(await db.doc('rooms/'+c).get()).exists)break}
     await db.doc('rooms/'+c).set({v:2,code:c,host:me(),max:maxSel,n:Math.max(4,maxSel),status:'lobby',rnd:0,players:[{id:me(),name}],pieces:[],turn:0,dice:null,last:1,winner:null,fin:[],log:''});
     await sub(c);
@@ -267,6 +271,7 @@ async function join(){
   if(c.length<5)return setMsg('Enter the 5-letter room code');
   saveName(name);
   try{
+    if(authReady)await authReady;
     const r=await db.doc('rooms/'+c).get();
     if(!r.exists||r.data().v!==2)return setMsg('Room not found');
     const d={...r.data()};
@@ -335,7 +340,7 @@ function botTick(){
 }
 // ---------- views ----------
 const home=(nm,cd)=>`<div class="logo"><span>L</span><span>U</span><span>D</span><span>O</span></div><div class="sub">Play with friends · 2–6 players</div>
-<div class="panel pnl" style="animation-delay:.06s"><label>Your name</label><input id="nm" maxlength="14" value="${esc(nm!=null?nm:savedName())}" placeholder="Enter your name">${db?'':'<div class="err">Connecting to the game server…</div>'}</div>
+<div class="panel pnl" style="animation-delay:.06s"><label>Your name</label><input id="nm" maxlength="14" value="${esc(nm!=null?nm:savedName())}" placeholder="Enter your name">${!db&&!msg?'<div class="err" id="cn">Connecting to the game server…</div>':''}</div>
 <div class="panel pnl" style="animation-delay:.16s"><label>Create a room — number of players</label><div class="pills">${[2,3,4,5,6].map(n=>`<button class="pill ${n==maxSel?'on':''}" data-act="pc" data-n="${n}">${n}</button>`).join('')}</div><div class="mut" id="cap">${capt(maxSel)}</div><button class="btn" data-act="create" ${db?'':'disabled'}>Create room</button></div>
 <div class="panel pnl" style="animation-delay:.26s"><label>Join with a room code</label><input id="cd" maxlength="5" value="${esc(cd||'')}" placeholder="CODE" style="text-transform:uppercase;letter-spacing:6px;text-align:center"><button class="btn alt" data-act="join" ${db?'':'disabled'}>Join room</button></div><button class="btn gh" data-act="demo">▶ Watch a 5-player demo</button><div class="err" id="err">${esc(msg)}</div>`;
 const capt=n=>n==5?'Pentagon board':n==6?'Hexagon board':'Classic cross board';
@@ -403,7 +408,7 @@ function renderMsgs(list){const box=$('msgs');if(!box)return;
   box.innerHTML=asc.map(m=>{const own=m.i===me(),pl=S&&S.players&&S.players.find(p=>p.id===m.i);
     return '<div class="m'+(own?' me':'')+'" data-id="'+esc(m.id)+'"><b style="--c:'+(pl&&pl.arm!=null?COL[pl.arm]:'#b9b3e6')+'">'+esc(own?'You':(m.n||'Player'))+'</b><span>'+esc(m.t||'')+'</span><time>'+hhmm(m.ts)+'</time></div>'}).join('');
   if(near)requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight})}
-function chatChanged(){renderMsgs(msgs);setBadge(msgsUnread)}
+function chatChanged(){if(chatOpen){msgs.forEach(m=>seenMsgs.add(m.id));renderMsgs(msgs)}setBadge(msgsUnread)}
 function watchMsgs(code){unsubMsgs&&unsubMsgs();msgs=[];msgsUnread=0;seenMsgs=new Set();
   let first=true;
   unsubMsgs=db.watchMsgs(code,d=>{if(!d)return;msgs=d;
@@ -454,13 +459,13 @@ document.body.insertAdjacentHTML('beforeend',`
 </section>`);
 (async()=>{
   try{
-    if(firebaseConfig.apiKey==='YOUR_API_KEY')throw new Error('cfg');
-    const [{initializeApp},{getAuth,signInAnonymously},{getFirestore,doc:fdoc,getDoc,setDoc,onSnapshot,runTransaction,collection,query,orderBy,limit,addDoc}]=await Promise.all([
+    const [{firebaseConfig},{initializeApp},{getAuth,signInAnonymously,onAuthStateChanged},{getFirestore,doc:fdoc,getDoc,setDoc,onSnapshot,runTransaction,collection,query,orderBy,limit,addDoc}]=await Promise.all([
+      import('./firebase-config.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')]);
+    if(firebaseConfig.apiKey==='YOUR_API_KEY')throw new Error('cfg');
     const fb=initializeApp(firebaseConfig),fs=getFirestore(fb);
-    uid=(await signInAnonymously(getAuth(fb))).user.uid;
     // Firestore has no nested arrays, so store pieces as {p0:[..],p1:[..]}
     const enc=d=>({...d,pieces:Object.fromEntries((d.pieces||[]).map((a,i)=>['p'+i,a]))});
     const dec=d=>({...d,pieces:Object.keys(d.pieces||{}).sort().map(k=>d.pieces[k])});
@@ -473,7 +478,17 @@ document.body.insertAdjacentHTML('beforeend',`
     tx:(path,fn)=>runTransaction(fs,async t=>{const r=fdoc(fs,path);const s=await t.get(r);if(!s.exists())throw Error('gone');const nd=fn(dec(s.data()));if(nd)t.set(r,enc(nd))}),
     sendMsg:o=>addDoc(collection(fs,'rooms/'+o.code+'/msgs'),{u:o.u,i:o.i,n:o.n,t:o.t,ts:o.ts}),
     watchMsgs:(code,cb)=>onSnapshot(query(collection(fs,'rooms/'+code+'/msgs'),orderBy('ts','desc'),limit(50)),s=>cb(s.docs.map(d=>({id:d.id,...d.data()}))),e=>cb(null,e))};
-  }catch(e){db=null;msg=e.message==='cfg'?'Firebase is not configured yet. See README.md.':'Arcade offline — check your connection'}
-  if(!S)render();
+    // Auth resolves off the critical path: reuse a persisted session (no
+    // network), else sign in. create()/join() await this before first request.
+    authReady=new Promise((res,rej)=>{
+      const auth=getAuth(fb);
+      const un=onAuthStateChanged(auth,u=>{un();
+        if(u)res((uid=u.uid));
+        else signInAnonymously(auth).then(c=>res((uid=c.user.uid)),rej)});
+    });
+    authReady.catch(()=>{if(db){db=null;msg='Arcade offline — check your connection';if(!S)render()}});
+    if(!S){const cn=$('cn');cn&&cn.remove();
+      document.querySelectorAll('[data-act="create"],[data-act="join"]').forEach(b=>b.disabled=false)}
+  }catch(e){db=null;msg=e.message==='cfg'?'Firebase is not configured yet. See README.md.':'Arcade offline — check your connection';if(!S)render()}
 })();
 </script></body></html>
