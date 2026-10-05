@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- Source for build/icon.png (512×512). Rendered headless:
+     chrome --headless --window-size=512,512 --screenshot=icon.png icon.html
+     Brand: #2a1a6e background, gold #ffd166 ring, ivory dice, LUDO wordmark. -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 512px;
+        height: 512px;
+        overflow: hidden;
+        background: #2a1a6e;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg" cx="50%" cy="36%" r="80%">
+          <stop offset="0%" stop-color="#3d2794" />
+          <stop offset="100%" stop-color="#2a1a6e" />
+        </radialGradient>
+        <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe6a3" />
+          <stop offset="1" stop-color="#ffd166" />
+        </linearGradient>
+        <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#150c40" flood-opacity="0.55" />
+        </filter>
+      </defs>
+
+      <rect width="512" height="512" fill="url(#bg)" />
+
+      <!-- gold ring -->
+      <circle cx="256" cy="212" r="152" fill="none" stroke="url(#gold)" stroke-width="15" />
+      <circle cx="256" cy="212" r="171" fill="none" stroke="#ffd166" stroke-width="3" opacity="0.45" />
+
+      <!-- dice (quincunx), tilted for a little life -->
+      <g transform="rotate(-10 256 212)" filter="url(#soft)">
+        <rect x="184" y="140" width="144" height="144" rx="28" fill="#fff8e8" />
+        <rect
+          x="184"
+          y="140"
+          width="144"
+          height="144"
+          rx="28"
+          fill="none"
+          stroke="#ffd166"
+          stroke-width="5"
+        />
+        <g fill="#2a1a6e">
+          <circle cx="220" cy="176" r="14" />
+          <circle cx="292" cy="176" r="14" />
+          <circle cx="256" cy="212" r="14" />
+          <circle cx="220" cy="248" r="14" />
+          <circle cx="292" cy="248" r="14" />
+        </g>
+      </g>
+
+      <!-- wordmark -->
+      <text
+        x="256"
+        y="444"
+        text-anchor="middle"
+        font-family="'DejaVu Sans', 'Liberation Sans', sans-serif"
+        font-size="86"
+        font-weight="bold"
+        letter-spacing="10"
+        fill="#ffd166"
+      >
+        LUDO
+      </text>
+      <text
+        x="256"
+        y="486"
+        text-anchor="middle"
+        font-family="'DejaVu Sans', 'Liberation Sans', sans-serif"
+        font-size="27"
+        font-weight="bold"
+        letter-spacing="7"
+        fill="#ffe6a3"
+        opacity="0.85"
+      >
+        WITH FRIENDS
+      </text>
+    </svg>
+  </body>
+</html>

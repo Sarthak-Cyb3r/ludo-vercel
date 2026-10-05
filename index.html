@@ -11,6 +11,8 @@
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js">
 <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js">
 <link rel="modulepreload" href="./firebase-config.js">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--fg:#fff;--mut:#b9b3e6;--tm:160ms;--te:420ms;--eo:cubic-bezier(.22,1,.36,1);--em:cubic-bezier(.4,0,.2,1);--es:cubic-bezier(.34,1.56,.64,1);--er:cubic-bezier(.2,.8,.3,1)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-x:hidden}
@@ -491,4 +493,15 @@ document.body.insertAdjacentHTML('beforeend',`
       document.querySelectorAll('[data-act="create"],[data-act="join"]').forEach(b=>b.disabled=false)}
   }catch(e){db=null;msg=e.message==='cfg'?'Firebase is not configured yet. See README.md.':'Arcade offline — check your connection';if(!S)render()}
 })();
+</script>
+<script type="module">
+// PWA: register the service worker (NATIVE-APPS-PLAN §4.1). Behaviour-neutral —
+// guarded, swallowed, and fully isolated from the game init IIFE above.
+try{
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+    const reg=()=>{try{const p=navigator.serviceWorker.register('./sw.js');if(p&&p.catch)p.catch(()=>{})}catch(e){}};
+    if(document.readyState==='complete')reg();
+    else window.addEventListener('load',reg,{once:true});
+  }
+}catch(e){}
 </script></body></html>

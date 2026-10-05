@@ -1,0 +1,56 @@
+{
+  "name": "ludo-with-friends",
+  "productName": "Ludo with Friends",
+  "version": "1.0.0",
+  "description": "Real-time online Ludo with friends and chat — thin Electron shell around the live web app.",
+  "homepage": "https://ludo-vercel-rho.vercel.app",
+  "desktopName": "ludo-with-friends.desktop",
+  "author": "Ludo with Friends",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:www": "node build-www.mjs",
+    "dist": "npm run build:www && electron-builder --linux",
+    "dist:dir": "npm run build:www && electron-builder --linux --dir"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.ludovercel.app",
+    "productName": "Ludo with Friends",
+    "executableName": "ludo-with-friends",
+    "artifactName": "${name}-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "resources/**"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Game",
+      "synopsis": "Real-time online Ludo with friends and chat",
+      "maintainer": "Ludo with Friends <noreply@ludo-vercel-rho.vercel.app>",
+      "icon": "build/icon.png",
+      "syncDesktopName": true,
+      "desktop": {
+        "entry": {
+          "StartupWMClass": "ludo-with-friends",
+          "Keywords": "ludo;board;game;online;multiplayer;"
+        }
+      }
+    },
+    "deb": {
+      "priority": "optional"
+    }
+  }
+}

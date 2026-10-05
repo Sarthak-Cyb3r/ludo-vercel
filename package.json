@@ -1,0 +1,31 @@
+{
+  "name": "ludo-vercel",
+  "version": "1.0.0",
+  "description": "Multiplayer Ludo for 2-6 players. Classic cross board for 2-4, pentagon for 5, hexagon for 6. Create a room, share the 5-letter code, friends join from any device.",
+  "scripts": {
+    "build:www": "node scripts/build-www.mjs",
+    "sync": "npm run build:www && cap sync android",
+    "android:build": "npm run sync && cd android && ./gradlew assembleDebug",
+    "android:apk": "cd android && ./gradlew assembleDebug",
+    "android:release": "cd android && ./gradlew assembleRelease",
+    "android:open": "cap open android"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarthak-Cyb3r/ludo-vercel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sarthak-Cyb3r/ludo-vercel/issues"
+  },
+  "homepage": "https://github.com/Sarthak-Cyb3r/ludo-vercel#readme",
+  "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/status-bar": "^8.0.4"
+  }
+}

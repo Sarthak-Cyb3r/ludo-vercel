@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App brand palette (mirrors the web theme, index.html / manifest.webmanifest). -->
+    <color name="ludoDeep">#2a1a6e</color>
+</resources>

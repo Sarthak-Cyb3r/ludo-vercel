@@ -1,2 +1,42 @@
+# --- Vercel / tooling ---
 .vercel/
 node_modules/
+
+# --- Capacitor: generated web copy (canonical sources live at repo root) ---
+# Rebuild any time with: npm run build:www   (see scripts/build-www.mjs)
+www/
+
+# --- Android build outputs / machine-local files ---
+# (android/.gitignore already covers build/, .gradle/, local.properties and the
+#  synced assets under android/app/src/main/assets/; these are belt-and-braces.)
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+android/.idea/
+
+# --- Signed artifacts: never commit APKs/AABs ---
+*.apk
+*.aab
+
+# --- Linux desktop build outputs (binaries for portfolio; rebuilt via `npm run dist`) ---
+linux/dist/
+linux/resources/
+*.AppImage
+*.deb
+*.blockmap
+
+# --- Signing material: NEVER commit keystores or their passwords ---
+*.jks
+*.keystore
+*.p12
+*.pepk
+key.properties
+keystore.properties
+.env
+.env.*
+
+# --- Misc ---
+*.log
+.DS_Store

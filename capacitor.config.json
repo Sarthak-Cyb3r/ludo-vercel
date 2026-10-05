@@ -1,0 +1,17 @@
+{
+  "appId": "com.ludovercel.app",
+  "appName": "Ludo with Friends",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#2a1a6e"
+    }
+  }
+}
