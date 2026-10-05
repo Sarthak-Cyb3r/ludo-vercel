@@ -1,0 +1,25 @@
+# Vercel only needs the static site (it uses .vercelignore, NOT .gitignore).
+node_modules/
+www/
+android/
+linux/
+tests/
+docs/
+scripts/
+.npm/
+*.md
+!README.md
+*.apk
+*.aab
+*.deb
+*.AppImage
+*.blockmap
+*.jks
+*.keystore
+*.p12
+key.properties
+keystore.properties
+.env
+.env.*
+*.log
+.DS_Store
